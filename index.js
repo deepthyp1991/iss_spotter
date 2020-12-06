@@ -1,45 +1,54 @@
-const { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes, nextISSTimesForMyLocation } = require('./iss');
+// const { fetchMyIP } = require('./iss');
 
 // fetchMyIP((error, ip) => {
-//   if (error) {
+//   if(error){
 //     console.log("It didn't work!" , error);
 //     return;
 //   }
 
 //   console.log('It worked! Returned IP:' , ip);
-// });
+// })
 
-// fetchCoordsByIP('184.68.214.222', (error, data) => {
+//API Call #2: Fetch Geo Coordinates By IP
+
+// const { fetchCoordsByIP } = require('./iss');
+
+// fetchCoordsByIP('162.245.144.188', (error, coords) => {
 //   if (error) {
-//     console.log('It didn\'t work!', error);
+//     console.log("It didn't work!" , error);
 //     return;
 //   }
 
-//   console.log('It worked! Returned data', data);
-  
+//   console.log('It worked! Returned Coords:' , coords);
 // });
 
-// const location = { latitude: '51.12640', longitude: '-114.14190' };
-// fetchISSFlyOverTimes(location, (error, data) => {
+// const { fetchISSFlyOverTimes } = require('./iss');
+
+// const exampleCoords = { latitude: '49.27670', longitude: '-123.13000' };
+
+// fetchISSFlyOverTimes(exampleCoords, (error, passTimes) => {
 //   if (error) {
-//     console.log('It didn\'t work!', error);
+//     console.log("It didn't work!" , error);
 //     return;
 //   }
 
-//   console.log('It worked! Returned data', data);
-  
+//   console.log('It worked! Returned flyover times:' , passTimes);
 // });
+
+const { nextISSTimesForMyLocation } = require('./iss');
+const printPassTimes = function(passTimes) {
+  for (const pass of passTimes) {
+    const datetime = new Date(0);
+    datetime.setUTCSeconds(pass.risetime);
+    const duration = pass.duration;
+    console.log(`Next pass at ${datetime} for ${duration} seconds!`);
+  }
+};
 
 nextISSTimesForMyLocation((error, passTimes) => {
   if (error) {
     return console.log("It didn't work!", error);
   }
   // success, print out the deets!
-  // console.log(passTimes);
-  for (let passTime of passTimes) {
-    let date = new Date(0);
-    date.setUTCSeconds(passTime.risetime);
-    console.log('Next pass at ' + date + ' for ' + passTime.duration + ' seconds!');
-  }
-//loop through data objects and print out final string
+  printPassTimes(passTimes);
 });
